@@ -1,0 +1,11 @@
+{
+  "name": "static-web-app",
+  "version": "1.0.0",
+  "description": "Static web application with Tailwind and DaisyUI",
+  "scripts": {
+    "start": "serve public"
+  },
+  "dependencies": {
+    "serve": "^14.0.0"
+  }
+}
