@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cupcake">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DaisyUI Task Tracker</title>
+
+  <!-- ✅ Tailwind + DaisyUI -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.20/dist/full.css" rel="stylesheet" />
+
+  <!-- ✅ Required for theme toggle to work -->
+  <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+
+<body class="bg-base-200 text-base-content flex flex-col min-h-screen">
+
+  <!-- 🌐 Sticky Navbar -->
+  <div class="navbar bg-base-100 shadow-md sticky top-0 z-50">
+    <div class="flex-1">
+      <a class="btn btn-ghost normal-case text-xl">📝 TaskTracker</a>
+    </div>
+    <div class="flex-none">
+      <!-- ✅ Theme Dropdown Toggle -->
+      <div class="dropdown dropdown-end">
+        <label tabindex="0" class="btn btn-ghost btn-circle">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+               viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 3v1m0 16v1m8.66-9h1M3.34 12h1m15.36 6.36l-.7-.7M6.34 6.34l-.7-.7M18 12a6 6 0 11-12 0 6 6 0 0112 0z"/>
+          </svg>
+        </label>
+        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40">
+          <li><a data-set-theme="light" data-act-class="active">🌞 Light</a></li>
+          <li><a data-set-theme="dark" data-act-class="active">🌚 Dark</a></li>
+          <li><a data-set-theme="cupcake" data-act-class="active">🧁 Cupcake</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📋 Main Content -->
+  <main class="flex-grow container mx-auto px-4 py-6">
+    <div class="max-w-xl mx-auto space-y-6">
+      <form id="taskForm" class="card bg-base-100 shadow-lg">
+        <div class="card-body space-y-3">
+          <h2 class="card-title" id="formTitle">Add a Task</h2>
+          <input id="taskInput" type="text" placeholder="What needs to be done?" class="input input-bordered w-full" />
+          <button type="submit" class="btn btn-primary w-full" id="submitBtn">Add Task</button>
+        </div>
+      </form>
+
+      <!-- Task List -->
+      <ul id="taskList" class="space-y-2"></ul>
+    </div>
+  </main>
+
+  <!-- 📎 Sticky Footer -->
+  <footer class="footer footer-center p-4 bg-base-300 text-base-content sticky bottom-0">
+    <aside>
+      <p>Made with ❤️ using Tailwind + DaisyUI</p>
+    </aside>
+  </footer>
+
+  <!-- 🧠 JS Logic -->
+  <script>
+    const form = document.getElementById('taskForm');
+    const input = document.getElementById('taskInput');
+    const list = document.getElementById('taskList');
+    const formTitle = document.getElementById('formTitle');
+    const submitBtn = document.getElementById('submitBtn');
+
+    let editingItem = null;
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const value = input.value.trim();
+      if (!value) return;
+
+      if (editingItem) {
+        editingItem.querySelector('span').textContent = value;
+        resetForm();
+      } else {
+        const li = document.createElement('li');
+        li.className = "flex items-center justify-between bg-base-100 shadow p-3 rounded-lg";
+
+        li.innerHTML = `
+          <span class="flex-1 truncate">${value}</span>
+          <div class="flex gap-2 ml-4">
+            <button class="btn btn-sm btn-outline btn-warning">Edit</button>
+            <button class="btn btn-sm btn-outline btn-error">✕</button>
+          </div>
+        `;
+
+        const [editBtn, deleteBtn] = li.querySelectorAll('button');
+
+        editBtn.addEventListener('click', () => {
+          input.value = li.querySelector('span').textContent;
+          input.focus();
+          editingItem = li;
+          formTitle.textContent = "Edit Task";
+          submitBtn.textContent = "Update Task";
+        });
+
+        deleteBtn.addEventListener('click', () => {
+          if (editingItem === li) resetForm();
+          li.remove();
+        });
+
+        list.appendChild(li);
+      }
+
+      input.value = "";
+      input.focus();
+    });
+
+    function resetForm() {
+      editingItem = null;
+      formTitle.textContent = "Add a Task";
+      submitBtn.textContent = "Add Task";
+      input.value = "";
+    }
+  </script>
+</body>
+</html>
