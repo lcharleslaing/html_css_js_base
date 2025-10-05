@@ -8,7 +8,8 @@
   ],
   "routes": [
     {
-      "handle": "filesystem"
+      "src": "/(.+\\.[a-zA-Z]+)$",
+      "dest": "/public/$1"
     },
     {
       "src": "/(.*)",
