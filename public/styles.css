@@ -79,6 +79,7 @@
 /* Prevent horizontal overflow on small screens */
 html, body {
     max-width: 100%;
+}
 
 /* Keep the CSS file minimal — layout is handled by Tailwind/DaisyUI. */
 
