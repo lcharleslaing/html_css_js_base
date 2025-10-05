@@ -1,29 +1,43 @@
 // Task Manager with Local Storage
 class TaskManager {
     constructor() {
+        console.log('TaskManager initializing...'); // Debug
         this.tasks = [];
         this.loadFromLocalStorage();
         this.setupEventListeners();
     }
 
     setupEventListeners() {
+        console.log('Setting up event listeners...'); // Debug
         const form = document.getElementById('taskForm');
         const input = document.getElementById('taskInput');
         const list = document.getElementById('taskList');
+
+        if (!form || !input || !list) {
+            console.error('Required DOM elements not found:', { form, input, list });
+            return;
+        }
 
         // Load initial tasks
         this.renderTasks();
 
         // Form submission
         form.addEventListener('submit', (e) => {
+            console.log('Form submitted'); // Debug
             e.preventDefault();
             const value = input.value.trim();
-            if (!value) return;
+            console.log('Input value:', value); // Debug
+            if (!value) {
+                console.log('Empty input, skipping'); // Debug
+                return;
+            }
 
             if (this.editingTaskId) {
+                console.log('Updating existing task:', this.editingTaskId); // Debug
                 this.updateTask(this.editingTaskId, value);
                 this.resetForm();
             } else {
+                console.log('Creating new task'); // Debug
                 this.addTask(value);
             }
 
@@ -55,6 +69,7 @@ class TaskManager {
     }
 
     addTask(text) {
+        console.log('Adding new task:', text); // Debug
         const task = {
             id: Date.now().toString(),
             text: text,
@@ -64,6 +79,7 @@ class TaskManager {
 
         this.tasks.push(task);
         this.saveToLocalStorage();
+        console.log('Current tasks:', this.tasks); // Debug
         this.renderTasks();
     }
 
